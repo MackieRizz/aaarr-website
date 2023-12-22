@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+        integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+        crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap');
+    
+            * {
+                box-sizing: border-box;
+                outline: none;
+            }
+    
+            body {
+                background-color: #fdcc04;
+                font-family: 'Poppins', sans-serif;
+                display: flex;
+                flex-wrap: wrap;
+                margin: 0;
+                padding-top: 3rem;
+            }
+    
+            .add {
+                position: fixed;
+                top: 1rem;
+                right: 1rem;
+                background-color: black;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+            }
+    
+            .add:active {
+                transform: scale(0.98);
+            }
+    
+            .note {
+                background-color: beige;
+                box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1);
+                margin: 30px 20px;
+                height: 400px;
+                width: 400px;
+                overflow-y: scroll;
+            }
+    
+            .note .tools {
+                background-color: #6F2DA8;
+                display: flex;
+                justify-content: flex-end;
+                padding: 0.5rem;
+            }
+    
+            .note .tools button {
+                background-color: transparent;
+                border: none;
+                color: #fff;
+                cursor: pointer;
+                font-size: 1rem;
+                margin-left: 0.5rem;
+            }
+    
+            .note textarea {
+                outline: none;
+                font-family: inherit;
+                font-size: 1.2rem;
+                border: none;
+                height: 400px;
+                width: 100%;
+                padding: 20px;
+            }
+    
+            .main {
+                padding: 20px;
+            }
+    
+            .hidden {
+                display: none;
+            }
+    
+            #favorite-notes {
+                position: fixed;
+                top: 1rem;
+                background-color: black;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                margin-right: 25%
+                
+            }
+            #deleted-notes {
+                position: fixed;
+                top: 1rem;
+                background-color: black;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                margin-right: 15%;
+    
+            }
+    
+            #notes {
+                position: fixed;
+                top: 1rem;
+                background-color: #6F2DA8;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                margin-right: 8.5%;
+                
+            }
+    
+            .home {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                background-color: #fdcc04;
+                color: #fff;
+                border: solid black;
+                border-radius: 50px;
+                padding: 0.5rem;
+                cursor: pointer;
+            }
+    
+            .home i {
+                font-size: 2rem;
+                margin-right: 2rem;
+                margin-left: 2rem;
+            }
+    
+            #deleted-notes:active,
+            #favorite-notes:active {
+                transform: scale(0.98);
+            }
+            
+            #deleted-notes {
+                background-color: #dc3545;
+            }
+    
+            #favorite-notes {
+                background-color: #28a745;
+            }
+    
+            #delete-all {
+                display: none; /* initially hidden */
+                position: fixed;
+                top: 4rem;
+                background-color: black;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 1.0rem 1rem;
+                cursor: pointer;
+                margin-right: 0%;
+            }
+    
+            #all_notes {
+                position: fixed;
+                top: 1rem;
+                background-color: #000080;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                margin-right: 33%
+            }
+    
+        </style>
+    <title>Notes App</title>
+</head>
+
+<body>
+    <button class="add" id="add">
+        <i class="fas fa-plus"></i> Add Note
+    </button>
+
+    <button class="add" id="deleted-notes">
+        <i class="fas fa-trash-alt"></i> Deleted Notes
+    </button>
+
+    <button class="add" id="favorite-notes">
+        <i class="fa-solid fa-star"></i> Favorites
+    </button>
+
+    <button class="add" id="notes">
+        <i class="fa-solid fa-floppy-disk"></i> Save
+    </button>
+
+    <button class="add" id="delete-all">
+        <i class="fas fa-trash-alt"></i> Delete All
+    </button>
+
+    <button class="add" id="all_notes">
+        <i class="fa-solid fa-folder"></i> All Notes
+    </button>
+    <div class="home">
+        <a href="ah.html">
+            <i class="fas fa-home"></i>
+        </a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/1.2.2/marked.min.js"></script>
+
+    <script>
+    const addBtn = document.getElementById('add');
+    const deletedNotesBtn = document.getElementById('deleted-notes');
+    const favBtn = document.getElementById('favorite-notes');
+    const notesBtn = document.getElementById('notes');
+    const deleteAllBtn = document.getElementById('delete-all'); // Connect to the HTML button
+    
+    const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    const deletedNotes = JSON.parse(localStorage.getItem('deletedNotes')) || [];
+    const favoriteNotes = JSON.parse(localStorage.getItem('favoriteNotes')) || [];
+
+    if (notes) {
+        notes.forEach(note => addNewNote(note))
+    }
+    
+    notesBtn.addEventListener('click', () => {
+        displayNotes(getNonDeletedAndNonFavoritedNotes());
+        deleteAllBtn.style.display = 'none';
+    });
+
+    addBtn.addEventListener('click', () => {
+        addNewNote();
+        deleteAllBtn.style.display = 'none';
+    });
+    
+    favBtn.addEventListener('click', () => {
+    displayNotes(favoriteNotes);
+    deleteAllBtn.style.display = 'none';    
+    });
+
+    deletedNotesBtn.addEventListener('click', () => displayNotes(deletedNotes));
+    
+
+    function addNewNote(text = '', noteType = 'normal') {
+        const note = document.createElement('div')
+        note.classList.add('note')
+
+        note.innerHTML = `
+        <div class="tools">
+            <button class="edit"><i class="fas fa-edit"></i></button>
+            <button class="delete"><i class="fas fa-trash-alt"></i></button>
+            <button class="favorite"><i class="fas fa-star"></i></button>
+        </div>
+
+        <div class="main ${text ? "" : "hidden"}"></div>
+        <textarea class="${text ? "hidden" : ""}"></textarea>
+        `
+
+        const favoriteBtn = note.querySelector('.favorite');
+        const editBtn = note.querySelector('.edit')
+        const deleteBtn = note.querySelector('.delete')
+        const main = note.querySelector('.main')
+        const textArea = note.querySelector('textarea')
+        const homeBtn = document.querySelector('.home a');
+
+        textArea.value = text
+        main.innerHTML = marked(text)
+
+        deleteBtn.addEventListener('click', () => {
+            note.remove();
+            const index = favoriteNotes.indexOf(textArea.value);
+            if (index !== -1) {
+                favoriteNotes.splice(index, 1);
+                localStorage.setItem('favoriteNotes', JSON.stringify(favoriteNotes));
+            }
+            deletedNotes.push(textArea.value);
+            localStorage.setItem('deletedNotes', JSON.stringify(deletedNotes));
+            updateLS();
+         });
+         
+         
+    
+         favoriteBtn.addEventListener('click', () => {
+            const index = favoriteNotes.indexOf(textArea.value);
+            if (index !== -1) {
+                // Note is already in the favoriteNotes array, remove it
+                favoriteNotes.splice(index, 1);
+                localStorage.setItem('favoriteNotes', JSON.stringify(favoriteNotes));
+                note.remove();
+                displayNotes(favoriteNotes, 'favorite');
+            } else {
+                // Note is not in the favoriteNotes array, add it
+                note.remove();
+                favoriteNotes.push(textArea.value);
+                localStorage.setItem('favoriteNotes', JSON.stringify(favoriteNotes));
+                updateLS();
+            }
+         });
+         
+    
+        editBtn.addEventListener('click', () => {
+            main.classList.toggle('hidden');
+            textArea.classList.toggle('hidden');
+        });
+    
+
+        textArea.addEventListener('input', (e) => {
+            const { value } = e.target
+            main.innerHTML = marked(value)
+            updateLS()
+        })
+
+        homeBtn.addEventListener('click',(event) => {
+            event.preventDefault();
+            window.location.href = homeBtn.getAttribute('href');
+        });
+
+        document.body.appendChild(note)
+    }
+
+    function updateLS() {
+        const notesText = document.querySelectorAll('textarea')
+        const notes = []
+        notesText.forEach(note => notes.push(note.value))
+        localStorage.setItem('notes', JSON.stringify(notes))
+    }
+
+    function clearNotesDisplay() {
+        const noteElements = document.querySelectorAll('.note');
+        noteElements.forEach((noteElement) => {
+            noteElement.remove();
+        });
+     }
+     
+     function getAllNotes() {
+        const allNotes = JSON.parse(localStorage.getItem('notes')) || [];
+        const nonDeletedAndNormalNotes = allNotes.filter((note) => {
+            return !deletedNotes.includes(note) && !favoriteNotes.includes(note);
+        });
+        return favoriteNotes.concat(nonDeletedAndNormalNotes);
+     }
+
+    function displayNotes(notes) {
+        clearNotesDisplay();
+        notes.forEach((note) => {
+            addNewNote(note);
+        });
+    }
+    function getNonDeletedAndNonFavoritedNotes() {
+        const allNotes = JSON.parse(localStorage.getItem('notes')) || [];
+        const nonDeletedAndNonFavoritedNotes = allNotes.filter((note) => {
+            return !deletedNotes.includes(note) && !favoriteNotes.includes(note);
+        });
+        return nonDeletedAndNonFavoritedNotes;
+    }
+
+    favBtn.addEventListener('click', () => {
+        displayNotes(favoriteNotes, 'favorite');
+        deleteAllBtn.style.display = 'none';
+    });
+    
+    deletedNotesBtn.addEventListener('click', () => {
+        displayNotes(deletedNotes);
+        deleteAllBtn.style.display = 'block';
+    });
+    
+    deleteAllBtn.addEventListener('click', () => {
+        deletedNotes.length = 0;
+        localStorage.setItem('deletedNotes', JSON.stringify(deletedNotes));
+        displayNotes(deletedNotes);
+     });
+     
+     const allNotesBtn = document.getElementById('all_notes');
+     
+     allNotesBtn.addEventListener('click', () => {
+        const allNotes = getAllNotes();
+        displayNotes(allNotes);
+        deleteAllBtn.style.display = 'none';
+     });
+
+    </script>
+
+</body>
+
+</html>
